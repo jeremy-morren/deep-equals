@@ -27,7 +27,7 @@ internal class DeepEqualsWriter
         _writer.WriteLineThenPush('{');
 
         _writer.WriteClassAttributes();
-        _writer.WriteLine("internal class DeepEquals");
+        _writer.WriteLine("internal class GeneratedDeepEquals");
         _writer.WriteLineThenPush('{');
 
         WriteAllMethods(topLevelTypes);
