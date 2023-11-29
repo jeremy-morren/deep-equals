@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace DeepEqualsGenerator.Framework;
+namespace DeepEqualsGenerator.SourceGenerator.Framework;
 
 /// <summary>
 /// Provides an indented wrapper of <see cref="StringBuilder"/>

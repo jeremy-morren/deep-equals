@@ -1,4 +1,4 @@
-﻿namespace DeepEqualsGenerator.Graph;
+﻿namespace DeepEqualsGenerator.SourceGenerator.Graph;
 
 [PublicAPI]
 internal record ReadOnlyDictionary(INamedTypeSymbol InterfaceType, 

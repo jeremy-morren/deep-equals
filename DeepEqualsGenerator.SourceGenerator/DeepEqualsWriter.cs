@@ -1,14 +1,14 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using DeepEqualsGenerator.Framework;
-using DeepEqualsGenerator.Graph;
+using DeepEqualsGenerator.SourceGenerator.Framework;
+using DeepEqualsGenerator.SourceGenerator.Graph;
 using Delegate = System.Delegate;
 
 // ReSharper disable StringLiteralTypo
 // ReSharper disable InvertIf
 // ReSharper disable TailRecursiveCall
 
-namespace DeepEqualsGenerator;
+namespace DeepEqualsGenerator.SourceGenerator;
 
 internal class DeepEqualsWriter
 {
@@ -30,7 +30,7 @@ internal class DeepEqualsWriter
         _writer.WriteLine("internal class GeneratedDeepEquals");
         _writer.WriteLineThenPush('{');
 
-        WriteAllMethods(topLevelTypes);
+        WriteAllMethodsProperty(topLevelTypes);
 
         _writer.WriteLine();
 
@@ -41,7 +41,7 @@ internal class DeepEqualsWriter
         return _writer.ToString();
     }
 
-    private void WriteAllMethods(IReadOnlyList<ITypeSymbol> topLevelTypes)
+    private void WriteAllMethodsProperty(IReadOnlyList<ITypeSymbol> topLevelTypes)
     {
         var walker = new GraphWalker();
         
@@ -51,6 +51,7 @@ internal class DeepEqualsWriter
 
         void Add(ITypeSymbol type, string method)
         {
+            if (added.Contains(type)) return;
             added.Add(type);
             _writer.WriteLine($"new {pair}(typeof({type.CSharpName()}), {method}),");
         }
@@ -83,19 +84,20 @@ internal class DeepEqualsWriter
                     throw new NotImplementedException($"Unknown type {o}");
             }
         }
-        _writer.WriteStatement($"private static readonly {pair}[] AllMethods = new {pair}[]", () =>
+        _writer.WriteLine($"private static readonly {pair}[] AllMethods = new {pair}[]");
+        _writer.WriteLineThenPush('{');
+        foreach (var type in walker.Walk(topLevelTypes))
         {
-            foreach (var type in walker.Walk(topLevelTypes))
-            {
-                Recurse(type);
-            }
-            
-            //Generate top-level types that have an interface
-            foreach (var type in topLevelTypes)
-            {
-                Add(type, MethodName(type));
-            }
-        });
+            Recurse(type);
+        }
+        
+        //Generate top-level types that have an interface
+        foreach (var type in topLevelTypes)
+        {
+            Add(type, MethodName(type));
+        }
+
+        _writer.PopThenWriteLine("};");
     }
 
     #region Individual method generation
@@ -183,9 +185,8 @@ internal class DeepEqualsWriter
             _writer.WriteLine();
             
             _writer.WriteLine(HasReferenceObjectInGraph(compare.InterfaceType)
-                ? $"private static bool {method}({name} l, {name} r) => new DeepEquals().{innerMethod}(l,r);"
+                ? $"private static bool {method}({name} l, {name} r) => new GeneratedDeepEquals().{innerMethod}(l,r);"
                 : $"private static bool {method}({name} l, {name} r) => {innerMethod}(l,r);");
-
         }
     }
 
@@ -354,7 +355,7 @@ internal class DeepEqualsWriter
         if (HasReferenceObjectInGraph(type))
         {
             //Reference object. First write a static version, which is what everyone else can use
-            _writer.WriteLine($"private static bool Static_{method}({csharpName} l, {csharpName} r) => new DeepEquals().{method}(l,r);");
+            _writer.WriteLine($"private static bool Static_{method}({csharpName} l, {csharpName} r) => new GeneratedDeepEquals().{method}(l,r);");
 
             _writer.WriteLine();
             

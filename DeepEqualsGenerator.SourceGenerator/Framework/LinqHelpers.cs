@@ -1,4 +1,4 @@
-﻿namespace DeepEqualsGenerator.Framework;
+﻿namespace DeepEqualsGenerator.SourceGenerator.Framework;
 
 public static class LinqHelpers
 {

@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace DeepEqualsGenerator.Attributes;
+namespace DeepEqualsGenerator;
 
 /// <summary>
 /// Specify that a deep equals method should be generated for the target type.

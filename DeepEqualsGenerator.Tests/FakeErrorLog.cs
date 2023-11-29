@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using DeepEqualsGenerator.Framework;
+using DeepEqualsGenerator.SourceGenerator.Framework;
 using Microsoft.CodeAnalysis;
 
 // ReSharper disable ReturnTypeCanBeEnumerable.Global

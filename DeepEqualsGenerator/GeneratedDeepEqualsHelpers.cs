@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using DeepEqual.Syntax;
 using JetBrains.Annotations;
 
-namespace DeepEqualsGenerator.Attributes;
+namespace DeepEqualsGenerator;
 
 [PublicAPI]
 public static class GeneratedDeepEqualsHelpers
@@ -20,6 +20,7 @@ public static class GeneratedDeepEqualsHelpers
     /// <exception cref="NotImplementedException">
     /// <paramref name="a"/> and <paramref name="b"/> are different types
     /// </exception>
+    [System.Diagnostics.Contracts.Pure] //Not actually pure, but should be used as such
     public static bool IsFastDeepEqual<T>(T? a, T? b)
     {
         if (ReferenceEquals(a, b)) return true;
@@ -58,8 +59,8 @@ public static class GeneratedDeepEqualsHelpers
             
             if (type != null)
             {
-                var prop = type.GetProperty("AllMethods", BindingFlags.Static | BindingFlags.NonPublic)
-                           ?? throw new InvalidOperationException($"Unable to get AllMethods property on {type}");
+                var prop = type.GetField("AllMethods", BindingFlags.Static | BindingFlags.NonPublic)
+                           ?? throw new InvalidOperationException($"Unable to get AllMethods field on {type}");
                 var methods = (IEnumerable<KeyValuePair<Type, Delegate>>)prop.GetValue(null)!;
                 foreach (var pair in methods)
                     if (!GeneratedMethods.TryAdd(pair.Key, pair.Value))

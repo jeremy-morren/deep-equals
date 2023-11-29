@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
-using DeepEqualsGenerator.Framework;
-using DeepEqualsGenerator.Graph;
+using DeepEqualsGenerator.SourceGenerator.Framework;
+using DeepEqualsGenerator.SourceGenerator.Graph;
 
-namespace DeepEqualsGenerator;
+namespace DeepEqualsGenerator.SourceGenerator;
 
 internal class GraphWalker
 {

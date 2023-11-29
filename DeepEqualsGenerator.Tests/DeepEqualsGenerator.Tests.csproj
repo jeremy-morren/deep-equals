@@ -28,8 +28,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DeepEqualsGenerator.Attributes\DeepEqualsGenerator.Attributes.csproj" />
         <ProjectReference Include="..\DeepEqualsGenerator\DeepEqualsGenerator.csproj" />
+        <ProjectReference Include="..\DeepEqualsGenerator.SourceGenerator\DeepEqualsGenerator.SourceGenerator.csproj" />
     </ItemGroup>
     
     <ItemGroup>

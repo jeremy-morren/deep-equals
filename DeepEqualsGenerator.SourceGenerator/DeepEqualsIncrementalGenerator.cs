@@ -1,8 +1,9 @@
-﻿using DeepEqualsGenerator.Framework;
+﻿using DeepEqualsGenerator.SourceGenerator.Framework;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace DeepEqualsGenerator;
+namespace DeepEqualsGenerator.SourceGenerator;
 
+[Generator(LanguageNames.CSharp)]
 public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -10,7 +11,9 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
         //We run on all changes of 'Type' or 'Property' or 'Field'
 
         var symbols = context.SyntaxProvider.CreateSyntaxProvider(
-            static (n, _) => n is TypeDeclarationSyntax or PropertyDeclarationSyntax or FieldDeclarationSyntax,
+            static (n, _) => n is TypeDeclarationSyntax 
+                or PropertyDeclarationSyntax 
+                or FieldDeclarationSyntax,
             static (n, _) =>
             {
                 return n.Node switch
@@ -21,8 +24,6 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
                     _ => throw new NotImplementedException()
                 };
             });
-
-        symbols = symbols.Where(t => t != null && t.HasDeepEqualsAttribute(out _));
         
         context.RegisterSourceOutput(symbols.Collect(), static (context, source) =>
         {

@@ -6,7 +6,7 @@
 
 using System.Runtime.Serialization;
 
-namespace DeepEqualsGenerator;
+namespace DeepEqualsGenerator.SourceGenerator;
 
 internal static class TypeDefinitions
 {

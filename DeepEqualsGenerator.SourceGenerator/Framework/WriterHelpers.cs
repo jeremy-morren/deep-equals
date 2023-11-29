@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace DeepEqualsGenerator.Framework;
+namespace DeepEqualsGenerator.SourceGenerator.Framework;
 
 internal static class WriterHelpers
 {
