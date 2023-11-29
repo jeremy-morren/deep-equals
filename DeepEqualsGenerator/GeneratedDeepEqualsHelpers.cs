@@ -26,21 +26,19 @@ public static class GeneratedDeepEqualsHelpers
         if (ReferenceEquals(a, b)) return true;
         if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
         
-        var type = a.GetType();
-        
-        if (type != b.GetType())
+        if (a.GetType() != b.GetType())
             throw new NotImplementedException("Cannot compare values of different types");
         
-        if (GeneratedMethods.TryGetValue(type, out var d))
+        if (GeneratedMethods.TryGetValue(typeof(T), out var d))
             return ((Func<T, T, bool>) d)(a, b);
         
         //Add loaded generated methods
         AddGeneratedMethods();
         
-        if (GeneratedMethods.TryGetValue(type, out d))
+        if (GeneratedMethods.TryGetValue(typeof(T), out d))
             return ((Func<T, T, bool>) d)(a, b);
 
-        throw new Exception($"No generated deep equals method found for {type}");
+        throw new Exception($"No generated deep equals method found for {typeof(T)}");
     }
     
     private static void AddGeneratedMethods()
@@ -48,9 +46,14 @@ public static class GeneratedDeepEqualsHelpers
         var assemblies = AppDomain.CurrentDomain.GetAssemblies()
             .Where(a =>
             {
-                var name = a.GetType().Name;
-                //Exclude system types
-                return !name.StartsWith("Microsoft") && !name.StartsWith("System") && name != "mscorlib";
+                var name = a.GetName().Name;
+                //Exclude assemblies that won't have generated methods
+                return !name.StartsWith("Microsoft", StringComparison.Ordinal) 
+                       && !name.StartsWith("System", StringComparison.Ordinal) 
+                       && !name.StartsWith("Windows", StringComparison.Ordinal) 
+                       && !name.StartsWith("netstandard", StringComparison.Ordinal) 
+                       && !name.StartsWith("DeepEquals", StringComparison.Ordinal) 
+                       && name != "mscorlib";
             });
         lock (ProcessedAssemblies)
         {
@@ -72,7 +75,6 @@ public static class GeneratedDeepEqualsHelpers
             
                 ProcessedAssemblies.Add(a);
             }
-            
         }
     }
     
