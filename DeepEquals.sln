@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepEqualsGenerator", "Deep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepEqualsGenerator.Tests", "DeepEqualsGenerator.Tests\DeepEqualsGenerator.Tests.csproj", "{FE076B97-2ED2-4106-B463-886FA583D073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepEqualsGenerator.Attributes", "DeepEqualsGenerator.Attributes\DeepEqualsGenerator.Attributes.csproj", "{D005D60E-69AD-4054-8703-767C7A375E2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepEqualsGenerator.SourceGenerator", "DeepEqualsGenerator.SourceGenerator\DeepEqualsGenerator.SourceGenerator.csproj", "{CA971FE3-2732-4015-BF17-11A6A096DC87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +20,9 @@ Global
 		{FE076B97-2ED2-4106-B463-886FA583D073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE076B97-2ED2-4106-B463-886FA583D073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE076B97-2ED2-4106-B463-886FA583D073}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D005D60E-69AD-4054-8703-767C7A375E2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D005D60E-69AD-4054-8703-767C7A375E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D005D60E-69AD-4054-8703-767C7A375E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D005D60E-69AD-4054-8703-767C7A375E2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA971FE3-2732-4015-BF17-11A6A096DC87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA971FE3-2732-4015-BF17-11A6A096DC87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA971FE3-2732-4015-BF17-11A6A096DC87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA971FE3-2732-4015-BF17-11A6A096DC87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
