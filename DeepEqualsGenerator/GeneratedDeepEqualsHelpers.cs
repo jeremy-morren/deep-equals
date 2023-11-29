@@ -20,8 +20,7 @@ public static class GeneratedDeepEqualsHelpers
     /// <exception cref="NotImplementedException">
     /// <paramref name="a"/> and <paramref name="b"/> are different types
     /// </exception>
-    [System.Diagnostics.Contracts.Pure] //Not actually pure, but should be used as such
-    public static bool IsFastDeepEqual<T>(T? a, T? b)
+    public static bool IsFastDeepEqual<T>(this T? a, T? b)
     {
         if (ReferenceEquals(a, b)) return true;
         if (ReferenceEquals(a, null) || ReferenceEquals(b, null)) return false;
