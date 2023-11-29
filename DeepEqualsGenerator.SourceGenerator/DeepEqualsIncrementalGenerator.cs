@@ -16,11 +16,14 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
                 or FieldDeclarationSyntax,
             static (n, _) =>
             {
+                ITypeSymbol? GetType(SyntaxNode? node) => 
+                    node is TypeDeclarationSyntax t ? (ITypeSymbol?)n.SemanticModel.GetDeclaredSymbol(t) : null;
+
                 return n.Node switch
                 {
                     TypeDeclarationSyntax t => (ITypeSymbol?)n.SemanticModel.GetDeclaredSymbol(t),
-                    PropertyDeclarationSyntax p => n.SemanticModel.GetDeclaredSymbol(p)?.ContainingType,
-                    FieldDeclarationSyntax f => n.SemanticModel.GetDeclaredSymbol(f)?.ContainingType,
+                    PropertyDeclarationSyntax p => GetType(p.Parent),
+                    FieldDeclarationSyntax f => GetType(f.Parent),
                     _ => throw new NotImplementedException()
                 };
             });

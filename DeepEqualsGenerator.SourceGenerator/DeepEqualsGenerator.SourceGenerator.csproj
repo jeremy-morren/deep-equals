@@ -6,6 +6,14 @@
         <Nullable>enable</Nullable>
         <LangVersion>11</LangVersion>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+
+        <!-- Output will be in the analyzer (not lib) folder -->
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <!-- Suppress related NuGet warnings about the above -->
+        <NoWarn>NU5100;NU5128</NoWarn>
+
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
