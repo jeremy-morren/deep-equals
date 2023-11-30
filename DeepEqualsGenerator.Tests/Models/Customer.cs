@@ -50,7 +50,6 @@ public struct ChildStruct
     public int Id;
 }
 
-[GenerateDeepEquals]
 public class Order
 {
     public int CustomerId { get; }
@@ -58,4 +57,10 @@ public class Order
     public IEnumerable<BindingFlags?>? Flags;
 
     public HashSet<Order> Children;
+}
+
+[GenerateDeepEquals]
+public class OrderExtended : Order
+{
+    public DateTimeOffset? Date { get; init; }
 }

@@ -53,7 +53,7 @@ internal class GraphWalker
             return enumerable;
         }
         
-        var members = type.GetMembers()
+        var members = GetMembers(type)
             .Where(m => !m.IsStatic && !IsCompilerGenerated(m) && m.IsPublic())
             .ToList();
 
@@ -92,7 +92,20 @@ internal class GraphWalker
         return symbol.GetAttributes().Any(a => a.AttributeClass?.Name == "CompilerGeneratedAttribute");
     }
     
-    
+    private static IEnumerable<ISymbol> GetMembers(ITypeSymbol type)
+    {
+        var members = new List<ISymbol>();
+        while (true)
+        {
+            members.AddRange(type.GetMembers());
+            if (type.BaseType == null)
+                break;
+            type = type.BaseType;
+        }
+
+        return members.Distinct(SymbolEqualityComparer.Default);
+    }
+
     private static bool IsIReadOnlyDictionary(ITypeSymbol type, 
         out INamedTypeSymbol interfaceType, 
         out ITypeSymbol keyType, 
