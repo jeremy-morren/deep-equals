@@ -51,9 +51,10 @@ namespace DeepEqualsGenerator
             return
                 l.Address == r.Address &&
                 l.Name == r.Name &&
-                l.NullableInt == r.NullableInt &&
+                l.NullableInt.Equals(r.NullableInt) &&
                 l.NullableString == r.NullableString &&
-                l.NullableDecimal == r.NullableDecimal &&
+                l.NullableDecimal.Equals(r.NullableDecimal) &&
+                l.Date.Equals(r.Date) &&
                 DeepEqualsGenerator_Tests_Models_Contact_Nullable(l.Contact, r.Contact) &&
                 IReadOnlyList_int(l.IntList, r.IntList) &&
                 IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(l.Orders, r.Orders) &&
@@ -94,7 +95,7 @@ namespace DeepEqualsGenerator
                 var key = pair.Key;
                 var lv = pair.Value;
                 if (!r.TryGetValue(key, out var rv)) return false;
-                if (lv != rv) return false;
+                if (lv.Equals(rv)) return false;
             }
             return true;
         }
@@ -133,7 +134,7 @@ namespace DeepEqualsGenerator
             if (lFirst != rFirst || lId != rId) return false;
 
             return
-                l.CustomerId == r.CustomerId &&
+                l.CustomerId.Equals(r.CustomerId) &&
                 IEnumerable_Reflection_BindingFlags_Nullable(l.Flags, r.Flags) &&
                 IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order(l.Children, r.Children);
         }
@@ -157,7 +158,7 @@ namespace DeepEqualsGenerator
                 var rn = re.MoveNext();
                 if (ln != rn) return false;
                 if (!ln) return true;
-                if (le.Current != re.Current) return false;
+                if (le.Current.Equals(re.Current)) return false;
             }
             throw new NotImplementedException();
         }
@@ -197,7 +198,7 @@ namespace DeepEqualsGenerator
             if (count != r.Count) return false;
             for (var i = 0; i < count; ++i)
             {
-                if (l[i] != r[i]) return false;
+                if (l[i].Equals(r[i])) return false;
             }
             return true;
         }
@@ -249,7 +250,9 @@ namespace DeepEqualsGenerator
         private static bool DeepEqualsGenerator_Tests_Models_ChildStruct(global::DeepEqualsGenerator.Tests.Models.ChildStruct l, global::DeepEqualsGenerator.Tests.Models.ChildStruct r)
         {
             return
-                l.Id == r.Id;
+                l.Id.Equals(r.Id) &&
+                l.DoubleNull.Equals(r.DoubleNull) &&
+                l.Float.Equals(r.Float);
         }
 
         private static bool Static_IReadOnlyList_DeepEqualsGenerator_Tests_Models_Customer(global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Customer> l, global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Customer> r) => new GeneratedDeepEquals().IReadOnlyList_DeepEqualsGenerator_Tests_Models_Customer(l,r);
@@ -284,8 +287,8 @@ namespace DeepEqualsGenerator
             if (lFirst != rFirst || lId != rId) return false;
 
             return
-                l.Date == r.Date &&
-                l.CustomerId == r.CustomerId &&
+                l.Date.Equals(r.Date) &&
+                l.CustomerId.Equals(r.CustomerId) &&
                 IEnumerable_Reflection_BindingFlags_Nullable(l.Flags, r.Flags) &&
                 IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order(l.Children, r.Children);
         }

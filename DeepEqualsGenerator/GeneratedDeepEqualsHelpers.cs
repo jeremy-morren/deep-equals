@@ -1,8 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using DeepEqual.Syntax;
 using JetBrains.Annotations;
 
 namespace DeepEqualsGenerator;
@@ -107,6 +105,22 @@ public static class GeneratedDeepEqualsHelpers
         Add<ulong>((a, b) => a == b);
         Add<short>((a, b) => a == b);
         Add<ushort>((a, b) => a == b);
+        
+        Add<bool?>((a, b) => a == b);
+        Add<byte?>((a, b) => a == b);
+        Add<sbyte?>((a, b) => a == b);
+        Add<char?>((a, b) => a == b);
+        Add<decimal?>((a, b) => a == b);
+        Add<double?>((a, b) => a.Equals(b));
+        Add<float?>((a, b) => a.Equals(b));
+        Add<int?>((a, b) => a == b);
+        Add<uint?>((a, b) => a == b);
+        Add<nint?>((a, b) => a == b);
+        Add<nuint?>((a, b) => a == b);
+        Add<long?>((a, b) => a == b);
+        Add<ulong?>((a, b) => a == b);
+        Add<short?>((a, b) => a == b);
+        Add<ushort?>((a, b) => a == b);
         
         Add<string>((a, b) => a == b);
         

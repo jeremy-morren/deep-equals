@@ -4,8 +4,6 @@
 
 // ReSharper disable TailRecursiveCall
 
-using System.Runtime.Serialization;
-
 namespace DeepEqualsGenerator.SourceGenerator;
 
 internal static class TypeDefinitions
@@ -62,11 +60,16 @@ internal static class TypeDefinitions
                 //Treat all enums as primitives
                 if (type is INamedTypeSymbol { EnumUnderlyingType: not null })
                     return true;
-                
+
                 var name = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+                
                 return name switch
                 {
-                    nameof(DateTime) or nameof(DateTimeOffset) or nameof(TimeSpan) => true,
+                    nameof(DateTime)
+                        or nameof(DateTimeOffset) 
+                        or nameof(TimeSpan) 
+                        or "DateOnly" 
+                        or "TimeOnly" => true,
                     
                     _ => false
                 };

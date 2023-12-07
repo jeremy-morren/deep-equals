@@ -15,7 +15,7 @@ namespace DeepEqualsGenerator.Tests.Models;
 [GenerateDeepEquals(typeof(List<Customer>))]
 public class Customer
 {
-    public required string Name { get; init; }
+    public string Name { get; init; }
 
     public string Address;
 
@@ -34,6 +34,8 @@ public class Customer
     public List<Order> Orders { get; }
 
     public IEnumerable<ChildStruct> ChildStructs { get; }
+    
+    public DateOnly Date { get; }
 }
 
 public struct Contact
@@ -48,6 +50,10 @@ public struct Contact
 public struct ChildStruct
 {
     public int Id;
+
+    public double? DoubleNull;
+
+    public float Float { get; }
 }
 
 public class Order

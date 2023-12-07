@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using FluentAssertions;
 using Shouldly;
+
+#pragma warning disable SYSLIB0050
 
 namespace DeepEqualsGenerator.Tests;
 

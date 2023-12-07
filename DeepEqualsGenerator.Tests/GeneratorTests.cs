@@ -22,7 +22,7 @@ public class GeneratorTests
     public Task Generate()
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(Source));
-        
+
         var compilation = CSharpCompilation.Create(
             assemblyName: "DeepEquals.GeneratorTests",
             references: GetReferences(typeof(GenerateDeepEqualsAttribute), typeof(List<int>)),

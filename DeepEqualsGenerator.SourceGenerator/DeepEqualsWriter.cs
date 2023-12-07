@@ -1,8 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using DeepEqualsGenerator.SourceGenerator.Framework;
 using DeepEqualsGenerator.SourceGenerator.Graph;
 using Delegate = System.Delegate;
+// ReSharper disable SuggestBaseTypeForParameter
 
 // ReSharper disable StringLiteralTypo
 // ReSharper disable InvertIf
@@ -190,6 +190,14 @@ internal class DeepEqualsWriter
         }
     }
 
+    private static string PrimitiveEquals(ITypeSymbol s, string left, string right)
+    {
+        //For value types (including Nullable<>), use Equals method
+        //For reference types (string/object), use == operator
+        
+        return s.IsValueType ? $"{left}.Equals({right})" : $"{left} == {right}";
+    }
+
     private void Dictionary(ReadOnlyDictionary dictionary)
     {
         StartMethod(dictionary.InterfaceType);
@@ -204,9 +212,9 @@ internal class DeepEqualsWriter
             _writer.WriteLine("if (!r.TryGetValue(key, out var rv)) return false;");
             switch (dictionary.ValueType)
             {
-                case ITypeSymbol:
+                case ITypeSymbol s:
                     //Primitive
-                    _writer.WriteLine("if (lv != rv) return false;");
+                    _writer.WriteLine($"if ({PrimitiveEquals(s, "lv", "rv")}) return false;");
                     break;
                 default:
                     //NB: TODO: Handle complex keys
@@ -229,6 +237,7 @@ internal class DeepEqualsWriter
         
         _writer.WriteStatement("foreach (var lv in l)", () =>
         {
+            //NB: We rely on the set comparer here
             _writer.WriteLine("if (!r.Contains(lv)) return false;");
         });
         _writer.WriteLine("return true;");
@@ -247,9 +256,8 @@ internal class DeepEqualsWriter
         {
             switch (list.ElementType)
             {
-                case ITypeSymbol:
-                    //Primitive
-                    _writer.WriteLine("if (l[i] != r[i]) return false;");
+                case ITypeSymbol s:
+                    _writer.WriteLine($"if ({PrimitiveEquals(s, "l[i]", "r[i]")}) return false;");
                     break;
                 default:
                     _writer.WriteLine($"if (!{MethodName(list.ElementType)}(l[i], r[i])) return false;");
@@ -279,9 +287,9 @@ internal class DeepEqualsWriter
             
             switch (enumerable.ElementType)
             {
-                case ITypeSymbol:
+                case ITypeSymbol s:
                     //Primitive
-                    _writer.WriteLine("if (le.Current != re.Current) return false;");
+                    _writer.WriteLine($"if ({PrimitiveEquals(s, "le.Current", "re.Current")}) return false;");
                     break;
                 default:
                     _writer.WriteLine($"if (!{MethodName(enumerable.ElementType)}(le.Current, re.Current)) return false;");
@@ -310,13 +318,24 @@ internal class DeepEqualsWriter
         else
         {
             _writer.WriteLineThenPush("return");
+            
             //Compare members
+            
             foreach (var m in graph.PrimitiveMembers)
-                _writer.WriteLine($"l.{m.Name} == r.{m.Name} &&");
+            {
+                var type = m switch
+                {
+                    IFieldSymbol f => f.Type,
+                    IPropertySymbol p => p.Type,
+                    _ => throw new ArgumentOutOfRangeException(nameof(m), m, $"Unknown member type {m}")
+                };
+                _writer.WriteLine($"{PrimitiveEquals(type, $"l.{m.Name}", $"r.{m.Name}")} &&");
+            }
+            
             foreach (var m in graph.ComplexMembers)
                 _writer.WriteLine($"{MethodName(m.Type)}(l.{m.Member.Name}, r.{m.Member.Name}) &&");
         
-            _writer.TrimEnd(" ||\n".Length);
+            _writer.TrimEnd(" &&\n".Length);
             _writer.WriteRawLineAndPop(";");
         }
         

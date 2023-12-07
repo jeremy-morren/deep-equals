@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using DeepEqualsGenerator.SourceGenerator.Framework;
+﻿using DeepEqualsGenerator.SourceGenerator.Framework;
 using DeepEqualsGenerator.SourceGenerator.Graph;
 
 namespace DeepEqualsGenerator.SourceGenerator;

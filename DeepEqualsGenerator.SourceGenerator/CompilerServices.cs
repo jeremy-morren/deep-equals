@@ -1,8 +1,8 @@
 ﻿// ReSharper disable All
+#pragma warning disable CA1018 //Specify attribute usage
 
 namespace System.Runtime.CompilerServices
 {
-    
     internal class IsExternalInit : Attribute {}
 
     internal class CompilerFeatureRequiredAttribute : Attribute

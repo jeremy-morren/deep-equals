@@ -1,6 +1,4 @@
-﻿using DeepEqualsGenerator.SourceGenerator.Framework;
-
-namespace DeepEqualsGenerator.SourceGenerator;
+﻿namespace DeepEqualsGenerator.SourceGenerator;
 
 internal static class AttributeHelpers
 {
