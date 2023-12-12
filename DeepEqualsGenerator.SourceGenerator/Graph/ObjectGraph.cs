@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-
-namespace DeepEqualsGenerator.SourceGenerator.Graph;
+﻿namespace DeepEqualsGenerator.SourceGenerator.Graph;
 
 internal class ObjectGraph : IEqualityType
 {
