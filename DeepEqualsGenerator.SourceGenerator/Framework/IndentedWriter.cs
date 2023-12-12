@@ -6,6 +6,7 @@ namespace DeepEqualsGenerator.SourceGenerator.Framework;
 /// Provides an indented wrapper of <see cref="StringBuilder"/>
 /// that always uses <c>LF</c> line endings
 /// </summary>
+[PublicAPI]
 internal class IndentedWriter
 {
     private readonly int _indentSize;
@@ -14,7 +15,7 @@ internal class IndentedWriter
 
     private readonly StringBuilder _builder = new();
 
-    public int CurrentIndentLevel { get; private set; } = 0;
+    public int CurrentIndentLevel { get; private set; }
 
     public string Indent => new (' ', CurrentIndentLevel * _indentSize);
 

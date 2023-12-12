@@ -214,7 +214,7 @@ internal class DeepEqualsWriter
             {
                 case ITypeSymbol s:
                     //Primitive
-                    _writer.WriteLine($"if ({PrimitiveEquals(s, "lv", "rv")}) return false;");
+                    _writer.WriteLine($"if (!{PrimitiveEquals(s, "lv", "rv")}) return false;");
                     break;
                 default:
                     //NB: TODO: Handle complex keys
@@ -237,6 +237,9 @@ internal class DeepEqualsWriter
         
         _writer.WriteStatement("foreach (var lv in l)", () =>
         {
+            if (set.ElementType is not ITypeSymbol)
+                throw new NotImplementedException("Cannot generate equals method for complex set elements");
+            
             //NB: We rely on the set comparer here
             _writer.WriteLine("if (!r.Contains(lv)) return false;");
         });
