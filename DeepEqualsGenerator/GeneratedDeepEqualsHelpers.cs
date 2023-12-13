@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
+using DeepEqual.Syntax;
 using JetBrains.Annotations;
 
 namespace DeepEqualsGenerator;
@@ -26,17 +27,30 @@ public static class GeneratedDeepEqualsHelpers
         
         if (a.GetType() != b.GetType())
             throw new NotImplementedException("Cannot compare values of different types");
-        
+
         if (GeneratedMethods.TryGetValue(typeof(T), out var d))
-            return ((Func<T, T, bool>) d)(a, b);
+            return Invoke(a, b, d);
         
         //Add loaded generated methods
         AddGeneratedMethods();
         
         if (GeneratedMethods.TryGetValue(typeof(T), out d))
-            return ((Func<T, T, bool>) d)(a, b);
+            return Invoke(a, b, d);
 
         throw new Exception($"No generated deep equals method found for {typeof(T)}");
+    }
+
+    private static bool Invoke<T>(T a, T b, Delegate d)
+    {
+        var func = (Func<T, T, bool>)d;
+#if RELEASE
+        return func(a,b);
+#else
+        var slow = a.IsDeepEqual(b);
+        var fast = func(a, b);
+        if (slow != fast) throw new Exception($"Slow did not match fast for {typeof(T).FullName}");
+        return fast;
+#endif
     }
     
     private static void AddGeneratedMethods()

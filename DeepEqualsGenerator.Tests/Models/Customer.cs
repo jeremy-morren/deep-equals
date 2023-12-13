@@ -45,6 +45,8 @@ public struct Contact
     public Dictionary<string, int> Keys;
     
     public Dictionary<Order, Order> Orders;
+    
+    public HashSet<int> Ints;
 }
 
 public struct ChildStruct
@@ -62,7 +64,7 @@ public class Order
 
     public IEnumerable<BindingFlags?>? Flags;
 
-    public HashSet<Order> Children;
+    public Order[] Children;
 }
 
 [GenerateDeepEquals]

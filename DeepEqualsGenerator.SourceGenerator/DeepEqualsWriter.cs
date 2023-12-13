@@ -197,6 +197,14 @@ internal class DeepEqualsWriter
         
         return s.IsValueType ? $"{left}.Equals({right})" : $"{left} == {right}";
     }
+    
+    private static string PrimitiveNotEquals(ITypeSymbol s, string left, string right)
+    {
+        //For value types (including Nullable<>), use Equals method
+        //For reference types (string/object), use == operator
+        
+        return s.IsValueType ? $"!{left}.Equals({right})" : $"{left} != {right}";
+    }
 
     private void Dictionary(ReadOnlyDictionary dictionary)
     {
@@ -214,7 +222,7 @@ internal class DeepEqualsWriter
             {
                 case ITypeSymbol s:
                     //Primitive
-                    _writer.WriteLine($"if (!{PrimitiveEquals(s, "lv", "rv")}) return false;");
+                    _writer.WriteLine($"if ({PrimitiveNotEquals(s, "lv", "rv")}) return false;");
                     break;
                 default:
                     //NB: TODO: Handle complex keys
@@ -260,7 +268,7 @@ internal class DeepEqualsWriter
             switch (list.ElementType)
             {
                 case ITypeSymbol s:
-                    _writer.WriteLine($"if ({PrimitiveEquals(s, "l[i]", "r[i]")}) return false;");
+                    _writer.WriteLine($"if ({PrimitiveNotEquals(s, "l[i]", "r[i]")}) return false;");
                     break;
                 default:
                     _writer.WriteLine($"if (!{MethodName(list.ElementType)}(l[i], r[i])) return false;");
@@ -292,7 +300,7 @@ internal class DeepEqualsWriter
             {
                 case ITypeSymbol s:
                     //Primitive
-                    _writer.WriteLine($"if ({PrimitiveEquals(s, "le.Current", "re.Current")}) return false;");
+                    _writer.WriteLine($"if ({PrimitiveNotEquals(s, "le.Current", "re.Current")}) return false;");
                     break;
                 default:
                     _writer.WriteLine($"if (!{MethodName(enumerable.ElementType)}(le.Current, re.Current)) return false;");

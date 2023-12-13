@@ -24,9 +24,9 @@ namespace DeepEqualsGenerator
             new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IReadOnlyDictionary<global::DeepEqualsGenerator.Tests.Models.Order, global::DeepEqualsGenerator.Tests.Models.Order>), Static_IReadOnlyDictionary_DeepEqualsGenerator_Tests_Models_Order__DeepEqualsGenerator_Tests_Models_Order),
             new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::DeepEqualsGenerator.Tests.Models.Order), Static_DeepEqualsGenerator_Tests_Models_Order),
             new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IEnumerable<global::System.Reflection.BindingFlags?>), Static_IEnumerable_Reflection_BindingFlags_Nullable),
-            new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IReadOnlySet<global::DeepEqualsGenerator.Tests.Models.Order>), Static_IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order),
-            new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IReadOnlyList<int>), Static_IReadOnlyList_int),
             new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order>), Static_IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order),
+            new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IReadOnlySet<int>), Static_IReadOnlySet_int),
+            new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IReadOnlyList<int>), Static_IReadOnlyList_int),
             new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IEnumerable<global::DeepEqualsGenerator.Tests.Models.ChildStruct>), Static_IEnumerable_DeepEqualsGenerator_Tests_Models_ChildStruct),
             new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::DeepEqualsGenerator.Tests.Models.ChildStruct), DeepEqualsGenerator_Tests_Models_ChildStruct),
             new global::System.Collections.Generic.KeyValuePair<global::System.Type, Delegate>(typeof(global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Customer>), Static_IReadOnlyList_DeepEqualsGenerator_Tests_Models_Customer),
@@ -75,7 +75,8 @@ namespace DeepEqualsGenerator
             return
                 l.Telephone == r.Telephone &&
                 IReadOnlyDictionary_string__int(l.Keys, r.Keys) &&
-                IReadOnlyDictionary_DeepEqualsGenerator_Tests_Models_Order__DeepEqualsGenerator_Tests_Models_Order(l.Orders, r.Orders);
+                IReadOnlyDictionary_DeepEqualsGenerator_Tests_Models_Order__DeepEqualsGenerator_Tests_Models_Order(l.Orders, r.Orders) &&
+                IReadOnlySet_int(l.Ints, r.Ints);
         }
 
         private static bool Static_IReadOnlyDictionary_string__int(global::System.Collections.Generic.IReadOnlyDictionary<string, int> l, global::System.Collections.Generic.IReadOnlyDictionary<string, int> r) => new GeneratedDeepEquals().IReadOnlyDictionary_string__int(l,r);
@@ -95,7 +96,7 @@ namespace DeepEqualsGenerator
                 var key = pair.Key;
                 var lv = pair.Value;
                 if (!r.TryGetValue(key, out var rv)) return false;
-                if (lv.Equals(rv)) return false;
+                if (!lv.Equals(rv)) return false;
             }
             return true;
         }
@@ -136,7 +137,7 @@ namespace DeepEqualsGenerator
             return
                 l.CustomerId.Equals(r.CustomerId) &&
                 IEnumerable_Reflection_BindingFlags_Nullable(l.Flags, r.Flags) &&
-                IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order(l.Children, r.Children);
+                IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(l.Children, r.Children);
         }
 
         private static bool Static_IEnumerable_Reflection_BindingFlags_Nullable(global::System.Collections.Generic.IEnumerable<global::System.Reflection.BindingFlags?> l, global::System.Collections.Generic.IEnumerable<global::System.Reflection.BindingFlags?> r) => new GeneratedDeepEquals().IEnumerable_Reflection_BindingFlags_Nullable(l,r);
@@ -158,14 +159,34 @@ namespace DeepEqualsGenerator
                 var rn = re.MoveNext();
                 if (ln != rn) return false;
                 if (!ln) return true;
-                if (le.Current.Equals(re.Current)) return false;
+                if (!le.Current.Equals(re.Current)) return false;
             }
             throw new NotImplementedException();
         }
 
-        private static bool Static_IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order(global::System.Collections.Generic.IReadOnlySet<global::DeepEqualsGenerator.Tests.Models.Order> l, global::System.Collections.Generic.IReadOnlySet<global::DeepEqualsGenerator.Tests.Models.Order> r) => new GeneratedDeepEquals().IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order(l,r);
+        private static bool Static_IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> l, global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> r) => new GeneratedDeepEquals().IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(l,r);
 
-        private bool IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order(global::System.Collections.Generic.IReadOnlySet<global::DeepEqualsGenerator.Tests.Models.Order> l, global::System.Collections.Generic.IReadOnlySet<global::DeepEqualsGenerator.Tests.Models.Order> r)
+        private bool IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> l, global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> r)
+        {
+            if (object.ReferenceEquals(l, r)) return true;
+            if (object.ReferenceEquals(l, null) || ReferenceEquals(r, null)) return false;
+
+            long lId = _lIds.GetId(l, out bool lFirst);
+            long rId = _rIds.GetId(r, out bool rFirst);
+            if (lFirst != rFirst || lId != rId) return false;
+
+            var count = l.Count;
+            if (count != r.Count) return false;
+            for (var i = 0; i < count; ++i)
+            {
+                if (!DeepEqualsGenerator_Tests_Models_Order(l[i], r[i])) return false;
+            }
+            return true;
+        }
+
+        private static bool Static_IReadOnlySet_int(global::System.Collections.Generic.IReadOnlySet<int> l, global::System.Collections.Generic.IReadOnlySet<int> r) => new GeneratedDeepEquals().IReadOnlySet_int(l,r);
+
+        private bool IReadOnlySet_int(global::System.Collections.Generic.IReadOnlySet<int> l, global::System.Collections.Generic.IReadOnlySet<int> r)
         {
             if (object.ReferenceEquals(l, r)) return true;
             if (object.ReferenceEquals(l, null) || ReferenceEquals(r, null)) return false;
@@ -198,27 +219,7 @@ namespace DeepEqualsGenerator
             if (count != r.Count) return false;
             for (var i = 0; i < count; ++i)
             {
-                if (l[i].Equals(r[i])) return false;
-            }
-            return true;
-        }
-
-        private static bool Static_IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> l, global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> r) => new GeneratedDeepEquals().IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(l,r);
-
-        private bool IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> l, global::System.Collections.Generic.IReadOnlyList<global::DeepEqualsGenerator.Tests.Models.Order> r)
-        {
-            if (object.ReferenceEquals(l, r)) return true;
-            if (object.ReferenceEquals(l, null) || ReferenceEquals(r, null)) return false;
-
-            long lId = _lIds.GetId(l, out bool lFirst);
-            long rId = _rIds.GetId(r, out bool rFirst);
-            if (lFirst != rFirst || lId != rId) return false;
-
-            var count = l.Count;
-            if (count != r.Count) return false;
-            for (var i = 0; i < count; ++i)
-            {
-                if (!DeepEqualsGenerator_Tests_Models_Order(l[i], r[i])) return false;
+                if (!l[i].Equals(r[i])) return false;
             }
             return true;
         }
@@ -290,7 +291,7 @@ namespace DeepEqualsGenerator
                 l.Date.Equals(r.Date) &&
                 l.CustomerId.Equals(r.CustomerId) &&
                 IEnumerable_Reflection_BindingFlags_Nullable(l.Flags, r.Flags) &&
-                IReadOnlySet_DeepEqualsGenerator_Tests_Models_Order(l.Children, r.Children);
+                IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(l.Children, r.Children);
         }
 
         private static bool List_DeepEqualsGenerator_Tests_Models_Customer(global::System.Collections.Generic.List<global::DeepEqualsGenerator.Tests.Models.Customer> l, global::System.Collections.Generic.List<global::DeepEqualsGenerator.Tests.Models.Customer> r) => new GeneratedDeepEquals().IReadOnlyList_DeepEqualsGenerator_Tests_Models_Customer(l,r);
