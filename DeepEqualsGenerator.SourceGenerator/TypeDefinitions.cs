@@ -53,22 +53,23 @@ internal static class TypeDefinitions
                 or SpecialType.System_Int16
                 or SpecialType.System_UInt16
                 or SpecialType.System_String
-                or SpecialType.System_DateTime:
+                or SpecialType.System_DateTime
+                or SpecialType.System_UIntPtr
+                or SpecialType.System_IntPtr
+                or SpecialType.System_Enum: //All Enums are primitives
                 return true;
                 
             default:
                     
-                //Treat all enums as primitives
-                if (type is INamedTypeSymbol { EnumUnderlyingType: not null })
-                    return true;
-
                 var name = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
                 
                 return name switch
                 {
                     nameof(DateTime)
                         or nameof(DateTimeOffset) 
-                        or nameof(TimeSpan) 
+                        or nameof(TimeSpan)
+                        or nameof(IntPtr)
+                        or nameof(UIntPtr)
                         or "DateOnly" 
                         or "TimeOnly" => true,
                     
