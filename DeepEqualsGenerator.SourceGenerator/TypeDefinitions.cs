@@ -60,7 +60,10 @@ internal static class TypeDefinitions
                 return true;
                 
             default:
-                    
+
+                if (type is INamedTypeSymbol { EnumUnderlyingType: not null })
+                    return true;
+                
                 var name = type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
                 
                 return name switch
