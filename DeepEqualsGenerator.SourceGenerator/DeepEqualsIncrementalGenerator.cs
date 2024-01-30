@@ -51,7 +51,7 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
                 log.WriteError(Location.None, 
                     "DEG1000", 
                     "DeepEqualsGraphGenerator fatal error", 
-                    "Deep equals graph generator encountered a fatal error: {0}", 
+                    "Deep equals generator encountered a fatal error: {0}", 
                     e);
             }
         });

@@ -51,9 +51,8 @@ internal class DeepEqualsWriter
 
         void Add(ITypeSymbol type, string method)
         {
-            if (added.Contains(type)) return;
-            added.Add(type);
-            _writer.WriteLine($"new {pair}(typeof({type.CSharpName()}), {method}),");
+            if (added.Add(type))
+                _writer.WriteLine($"new {pair}(typeof({type.CSharpName()}), {method}),");
         }
         void Recurse(object o)
         {

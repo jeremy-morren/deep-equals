@@ -27,28 +27,28 @@ internal class GraphWalker
         if (IsIReadOnlyDictionary(type, out var interfaceType, out var keyType, out var valueType))
         {
             var dictionary = new ReadOnlyDictionary(interfaceType, keyType, WalkGraph(valueType));
-            _generated.Add(type, dictionary);
+            _generated[type] = dictionary;
             return dictionary;
         }
 
         if (IsIReadOnlySet(type, out interfaceType, out var elementType))
         {
             var set = new ReadOnlySet(interfaceType, WalkGraph(elementType));
-            _generated.Add(type, set);
+            _generated[type] = set;
             return set;
         }
         
         if (IsIReadOnlyList(type, out interfaceType, out elementType))
         {
             var list = new ReadOnlyList(interfaceType, WalkGraph(elementType));
-            _generated.Add(type, list);
+            _generated[type] = list;
             return list;
         }
         
         if (IsIEnumerable(type, out interfaceType, out elementType))
         {
             var enumerable = new EnumerableType(interfaceType, WalkGraph(elementType));
-            _generated.Add(type, enumerable);
+            _generated[type] = enumerable;
             return enumerable;
         }
         
