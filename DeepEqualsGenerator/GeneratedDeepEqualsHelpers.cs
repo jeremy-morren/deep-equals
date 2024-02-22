@@ -28,21 +28,25 @@ public static class GeneratedDeepEqualsHelpers
         if (a.GetType() != b.GetType())
             throw new NotImplementedException("Cannot compare values of different types");
 
+        return Invoke(a, b, GetFastDeepEqual<T>());
+    }
+    
+    public static Func<T, T, bool> GetFastDeepEqual<T>()
+    {
         if (GeneratedMethods.TryGetValue(typeof(T), out var d))
-            return Invoke(a, b, d);
+            return (Func<T, T, bool>)d;
         
         //Add loaded generated methods
         AddGeneratedMethods();
         
         if (GeneratedMethods.TryGetValue(typeof(T), out d))
-            return Invoke(a, b, d);
+            return (Func<T, T, bool>)d;
 
         throw new Exception($"No generated deep equals method found for {typeof(T)}");
     }
 
-    private static bool Invoke<T>(T a, T b, Delegate d)
+    private static bool Invoke<T>(T a, T b, Func<T, T, bool> func)
     {
-        var func = (Func<T, T, bool>)d;
 #if RELEASE
         return func(a,b);
 #else
