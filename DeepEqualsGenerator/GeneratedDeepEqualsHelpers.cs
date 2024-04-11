@@ -1,8 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text.Json;
-using DeepEqual.Syntax;
 using JetBrains.Annotations;
 
 namespace DeepEqualsGenerator;
