@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.Json;
+using DeepEqual.Syntax;
 using JetBrains.Annotations;
 
 namespace DeepEqualsGenerator;
@@ -46,20 +48,20 @@ public static class GeneratedDeepEqualsHelpers
 
     private static bool Invoke<T>(T a, T b, Func<T, T, bool> func)
     {
-        return func(a, b);
-        //TODO: Fast occasionally returns false where slow returns true
+        // return func(a, b);
+        // //TODO: Fast occasionally returns false where slow returns true
+        //
+#if RELEASE
+        return func(a,b);
+#else
+        var slow = a.IsDeepEqual(b);
+        var fast = func(a, b);
+        if (slow == fast) return fast;
         
-// #if RELEASE
-//         return func(a,b);
-// #else
-//         var slow = a.IsDeepEqual(b);
-//         var fast = func(a, b);
-//         if (slow == fast) return fast;
-//         
-//         var json = JsonSerializer.Serialize(a) == JsonSerializer.Serialize(b);
-//         
-//         throw new Exception($"Slow did not match fast for {typeof(T).FullName}. Slow: {slow}, Fast: {fast}, JSON: {json}");
-// #endif
+        var json = JsonSerializer.Serialize(a) == JsonSerializer.Serialize(b);
+        
+        throw new Exception($"Slow did not match fast for {typeof(T).FullName}. Slow: {slow}, Fast: {fast}, JSON: {json}");
+#endif
     }
     
     private static void AddGeneratedMethods()
