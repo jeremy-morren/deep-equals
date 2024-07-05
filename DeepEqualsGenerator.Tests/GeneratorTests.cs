@@ -15,7 +15,6 @@ using VerifyXunit;
 
 namespace DeepEqualsGenerator.Tests;
 
-[UsesVerify]
 public class GeneratorTests
 {
     [Fact]
