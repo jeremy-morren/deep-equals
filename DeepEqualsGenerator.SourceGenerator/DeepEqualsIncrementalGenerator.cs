@@ -11,21 +11,11 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
         //We run on all changes of 'Type' or 'Property' or 'Field'
 
         var symbols = context.SyntaxProvider.CreateSyntaxProvider(
-            static (n, _) => n is TypeDeclarationSyntax 
-                or PropertyDeclarationSyntax 
-                or FieldDeclarationSyntax,
-            static (n, _) =>
+            static (n, _) => n is TypeDeclarationSyntax,
+            static (context, _) =>
             {
-                ITypeSymbol? GetType(SyntaxNode? node) => 
-                    node is TypeDeclarationSyntax t ? (ITypeSymbol?)n.SemanticModel.GetDeclaredSymbol(t) : null;
-
-                return n.Node switch
-                {
-                    TypeDeclarationSyntax t => (ITypeSymbol?)n.SemanticModel.GetDeclaredSymbol(t),
-                    PropertyDeclarationSyntax p => GetType(p.Parent),
-                    FieldDeclarationSyntax f => GetType(f.Parent),
-                    _ => throw new NotImplementedException()
-                };
+                var t = (TypeDeclarationSyntax)context.Node;
+                return (ITypeSymbol?)context.SemanticModel.GetDeclaredSymbol(t);
             });
         
         context.RegisterSourceOutput(symbols.Collect(), static (context, source) =>
@@ -33,17 +23,15 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
             var log = new CompilationLogProvider(context);
             try
             {
-                var types = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
-                foreach (var t in source)
-                {
-                    if (t == null || !t.HasDeepEqualsAttribute(out var args))
-                        continue;
-                    foreach (var a in args)
-                        types.Add(a);
-                }
+                const string @interface = "global::DeepEqualsGenerator.IDeepEqualsContext";
+                var contexts =
+                    from t in source
+                    where t != null
+                          && t.Interfaces.Any(i => i.CSharpName() == @interface)
+                    select t;
                 
-                var csharp = new DeepEqualsWriter().Generate(types.ToList());
-
+                var csharp = new DeepEqualsWriter().Generate(contexts.ToList());
+                
                 context.AddSource("DeepEqualsGenerated.g.cs", csharp);
             }
             catch (Exception e)

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
@@ -34,5 +34,6 @@
     
     <ItemGroup>
         <None Include="Models/Customer.cs" CopyToOutputDirectory="Always" />
+        <Compile Remove="Models/Customer.cs" />
     </ItemGroup>
 </Project>

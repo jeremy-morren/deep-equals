@@ -28,13 +28,13 @@ public class GeneratorTests
             syntaxTrees: new[] {syntaxTree},
             options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-        compilation.GetDiagnostics().ShouldBeEmpty();
-
         var generator = new DeepEqualsIncrementalGenerator();
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 
         driver = driver.RunGenerators(compilation);
+        
+        driver.GetRunResult().Diagnostics.ShouldBeEmpty();
 
         return Verifier.Verify(driver);
     }

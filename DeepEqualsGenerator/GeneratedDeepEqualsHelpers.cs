@@ -64,44 +64,48 @@ public static class GeneratedDeepEqualsHelpers
 #endif
     }
     
+    /// <summary>
+    /// Adds generated methods from all types that implement <see cref="IDeepEqualsContext"/>
+    /// </summary>
     private static void AddGeneratedMethods()
     {
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+        var contexts = AppDomain.CurrentDomain.GetAssemblies()
             .Where(a =>
             {
                 var name = a.GetName().Name;
+                if (name == null) return false;
+
                 //Exclude assemblies that won't have generated methods
-                return !name.StartsWith("Microsoft", StringComparison.Ordinal) 
-                       && !name.StartsWith("System", StringComparison.Ordinal) 
-                       && !name.StartsWith("Windows", StringComparison.Ordinal) 
-                       && !name.StartsWith("netstandard", StringComparison.Ordinal) 
-                       && !name.StartsWith("DeepEquals", StringComparison.Ordinal) 
+                return !name.StartsWith("Microsoft", StringComparison.Ordinal)
+                       && !name.StartsWith("System", StringComparison.Ordinal)
+                       && !name.StartsWith("Windows", StringComparison.Ordinal)
+                       && !name.StartsWith("netstandard", StringComparison.Ordinal)
+                       && !name.StartsWith("DeepEquals", StringComparison.Ordinal)
                        && name != "mscorlib";
-            });
-        lock (ProcessedAssemblies)
+            })
+            .SelectMany(a => a.GetTypes())
+            .Where(typeof(IDeepEqualsContext).IsAssignableFrom)
+            .ToList();
+        
+        var addMethod = typeof(GeneratedDeepEqualsHelpers).GetMethod(nameof(AddMethodsFromContext), BindingFlags.NonPublic | BindingFlags.Static)!;
+        lock (ProcessedTypes)
         {
-            foreach (var a in assemblies)
+            foreach (var type in contexts.Where(t => !ProcessedTypes.Contains(t)))
             {
-                if (ProcessedAssemblies.Contains(a))
-                    return;
-                
-                var type = a.GetType("DeepEqualsGenerator.GeneratedDeepEquals");
-                if (type != null)
-                {
-                    var prop = type.GetField("AllMethods", BindingFlags.Static | BindingFlags.NonPublic)
-                               ?? throw new InvalidOperationException($"Unable to get AllMethods field on {type}");
-                    var methods = (IEnumerable<KeyValuePair<Type, Delegate>>)prop.GetValue(null)!;
-                    foreach (var pair in methods)
-                        if (!GeneratedMethods.TryAdd(pair.Key, pair.Value))
-                            throw new Exception($"{pair.Key} has multiple generated DeepEquals methods");
-                }
-            
-                ProcessedAssemblies.Add(a);
+                addMethod.MakeGenericMethod(type).Invoke(null, null);
+                ProcessedTypes.Add(type);
             }
         }
     }
+
+    private static void AddMethodsFromContext<TContext>() where TContext : IDeepEqualsContext
+    {
+        foreach (var pair in TContext.EqualsMethods)
+            if (!GeneratedMethods.TryAdd(pair.Key, pair.Value))
+                throw new Exception($"{pair.Key} has multiple generated DeepEquals methods");
+    }
     
-    private static readonly HashSet<Assembly> ProcessedAssemblies = new();
+    private static readonly HashSet<Type> ProcessedTypes = new();
     
     private static readonly ConcurrentDictionary<Type, Delegate> GeneratedMethods;
 

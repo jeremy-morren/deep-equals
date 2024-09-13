@@ -6,14 +6,13 @@ namespace DeepEqualsGenerator;
 /// Specify that a deep equals method should be generated for the target type.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = true, Inherited = false)]
-[PublicAPI]
-[MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
+[PublicAPI, MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
 public sealed class GenerateDeepEqualsAttribute : Attribute
 {
     /// <summary>
     /// The type to generate deep equals method for, or null if the target type should be used.
     /// </summary>
-    public Type? Type { get; }
+    public Type Type { get; }
 
     /// <summary>
     /// Specify that a deep equals method should be generated for <paramref name="type"/>
@@ -22,13 +21,5 @@ public sealed class GenerateDeepEqualsAttribute : Attribute
     public GenerateDeepEqualsAttribute(Type type)
     {
         Type = type;
-    }
-    
-    /// <summary>
-    /// Specify that a deep equals method should be generated for the target type.
-    /// </summary>
-    public GenerateDeepEqualsAttribute()
-    {
-        Type = null;
     }
 }

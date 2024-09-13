@@ -11,8 +11,13 @@ using System.Collections.Generic;
 
 namespace DeepEqualsGenerator.Tests.Models;
 
-[GenerateDeepEquals]
 [GenerateDeepEquals(typeof(List<Customer>))]
+[GenerateDeepEquals(typeof(OrderExtended))]
+public partial class DeepEqualsContext : IDeepEqualsContext
+{
+    
+}
+
 public class Customer
 {
     public string Name { get; init; }
@@ -67,7 +72,6 @@ public class Order
     public Order[] Children;
 }
 
-[GenerateDeepEquals]
 public class OrderExtended : Order
 {
     public DateTimeOffset? Date { get; init; }
