@@ -18,19 +18,17 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
                 return (ITypeSymbol?)context.SemanticModel.GetDeclaredSymbol(t);
             });
         
-        context.RegisterSourceOutput(symbols.Collect(), static (context, source) =>
+        //We only care about types that implement IDeepEqualsContext
+        const string @interface = "global::DeepEqualsGenerator.IDeepEqualsContext";
+        symbols = symbols.Where(
+            t => t != null && t.Interfaces.Any(i => i.CSharpName() == @interface));
+        
+        context.RegisterSourceOutput(symbols.Collect(), static (context, contexts) =>
         {
             var log = new CompilationLogProvider(context);
             try
             {
-                const string @interface = "global::DeepEqualsGenerator.IDeepEqualsContext";
-                var contexts =
-                    from t in source
-                    where t != null
-                          && t.Interfaces.Any(i => i.CSharpName() == @interface)
-                    select t;
-                
-                var csharp = new DeepEqualsWriter().Generate(contexts.ToList());
+                var csharp = new DeepEqualsWriter().Generate(contexts.ToList()!);
                 
                 context.AddSource("DeepEqualsGenerated.g.cs", csharp);
             }
