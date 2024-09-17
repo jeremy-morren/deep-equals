@@ -23,7 +23,7 @@ public class DeepEqualsIncrementalGenerator : IIncrementalGenerator
         symbols = symbols.Where(
             t => t != null && t.Interfaces.Any(i => i.CSharpName() == @interface));
         
-        context.RegisterSourceOutput(symbols.Collect(), static (context, contexts) =>
+        context.RegisterImplementationSourceOutput(symbols.Collect(), static (context, contexts) =>
         {
             var log = new CompilationLogProvider(context);
             try
