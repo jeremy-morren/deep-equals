@@ -343,6 +343,11 @@ internal class DeepEqualsWriter
                  */
                 _writer.WriteLine($"return l.HasValue == r.HasValue && (!l.HasValue || {MethodName(underlying)}(l.Value, r.Value));");
             }
+            else if (graph.PrimitiveMembers.Count + graph.ComplexMembers.Count == 0)
+            {
+                //Empty object, return true
+                _writer.WriteLine("return true;");
+            }
             else
             {
                 _writer.WriteLineThenPush("return");
