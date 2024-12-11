@@ -41,6 +41,14 @@ public class Customer
     public IEnumerable<ChildStruct> ChildStructs { get; }
     
     public DateOnly Date { get; }
+    
+    public int GetSetProperty { get; set; }
+    
+    public int GetInitProperty { get; init; }
+    
+    public int SetOnlyProperty { set => throw new NotImplementedException(); }
+
+    public string Calculated => throw new NotImplementedException();
 }
 
 public struct Contact

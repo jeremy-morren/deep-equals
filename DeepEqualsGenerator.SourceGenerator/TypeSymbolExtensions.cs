@@ -6,19 +6,22 @@
 
 namespace DeepEqualsGenerator.SourceGenerator;
 
-internal static class TypeDefinitions
+internal static class TypeSymbolExtensions
 {
     public static string CSharpName(this ITypeSymbol type) =>
         type.ToDisplayString(NullableFlowState.None, SymbolDisplayFormat.FullyQualifiedFormat);
     
+    /// <summary>
+    /// Returns true if the type is <see cref="Nullable{T}"/>
+    /// </summary>
     public static bool IsNullable(this ITypeSymbol type, out ITypeSymbol underlyingType)
     {
-        var name = type.ToDisplayString(NullableFlowState.None, SymbolDisplayFormat.MinimallyQualifiedFormat);
-        if (name.EndsWith("?") && type is INamedTypeSymbol named)
+        if (type is INamedTypeSymbol { IsGenericType: true, ConstructedFrom.SpecialType: SpecialType.System_Nullable_T } nullable)
         {
-            underlyingType = named.TypeArguments[0];
+            underlyingType = nullable.TypeArguments[0];
             return true;
         }
+
         underlyingType = null!;
         return false;
     }

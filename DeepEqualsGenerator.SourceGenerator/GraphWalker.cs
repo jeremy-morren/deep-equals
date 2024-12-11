@@ -1,5 +1,6 @@
 ﻿using DeepEqualsGenerator.SourceGenerator.Framework;
 using DeepEqualsGenerator.SourceGenerator.Graph;
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 
 namespace DeepEqualsGenerator.SourceGenerator;
 
@@ -66,21 +67,23 @@ internal class GraphWalker
         var graph = new ObjectGraph()
         {
             Type = type,
-            PrimitiveMembers = fields
-                .Where(f => f.Type.IsPrimitive())
+            PrimitiveMembers = fields.Where(f => f.Type.IsPrimitive())
                 .Cast<ISymbol>()
-                .Concat(properties
-                    .Where(p => p.Type.IsPrimitive()))
+                .Concat(properties.Where(p => p.Type.IsPrimitive()))
                 .ToArray(),
         };
         _generated.Add(type, graph);
 
-        foreach (var f in fields.Where(f => !f.Type.IsPrimitive()))
+        foreach (var f in fields)
         {
+            if (f.Type.IsPrimitive()) 
+                continue;
             graph.ComplexMembers.Add(new ComplexMember(f, WalkGraph(f.Type)));
         }
-        foreach (var p in properties.Where(p => !p.Type.IsPrimitive()))
+        foreach (var p in properties)
         {
+            if (p.Type.IsPrimitive())
+                continue;
             graph.ComplexMembers.Add(new ComplexMember(p, WalkGraph(p.Type)));
         }
         return graph;

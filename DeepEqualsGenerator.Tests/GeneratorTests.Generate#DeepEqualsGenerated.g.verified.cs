@@ -75,6 +75,9 @@ namespace DeepEqualsGenerator.Tests.Models
                 l.NullableString == r.NullableString &&
                 l.NullableDecimal.Equals(r.NullableDecimal) &&
                 l.Date.Equals(r.Date) &&
+                l.GetSetProperty.Equals(r.GetSetProperty) &&
+                l.GetInitProperty.Equals(r.GetInitProperty) &&
+                l.Calculated == r.Calculated &&
                 DeepEqualsGenerator_Tests_Models_Contact_Nullable(l.Contact, r.Contact) &&
                 IReadOnlyList_int(l.IntList, r.IntList) &&
                 IReadOnlyList_DeepEqualsGenerator_Tests_Models_Order(l.Orders, r.Orders) &&
