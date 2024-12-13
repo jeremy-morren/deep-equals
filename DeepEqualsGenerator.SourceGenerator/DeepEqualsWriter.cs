@@ -378,20 +378,26 @@ internal class DeepEqualsWriter
         private static bool HasReferenceObjectInGraph(ITypeSymbol type)
         {
             if (type.IsReferenceType) return true;
-            
+        
             if (type.IsPrimitive() || type.IsStatic) return false;
-
+            
             if (type.IsNullable(out var u))
                 return HasReferenceObjectInGraph(u);
-            
-            if (type is INamedTypeSymbol { IsGenericType: true } named && named.TypeArguments.Any(HasReferenceObjectInGraph))
+        
+            if (type is INamedTypeSymbol { IsGenericType: true } named
+                && named.TypeArguments.Where(NotCurrent).Any(HasReferenceObjectInGraph))
                 return true;
+
+            return type.GetMembers().Any(m => 
+                m.IsPublic() 
+                && m switch
+                {
+                    IFieldSymbol f => NotCurrent(f.Type) && HasReferenceObjectInGraph(f.Type),
+                    IPropertySymbol p => NotCurrent(p.Type) && !p.IsIndexer && HasReferenceObjectInGraph(p.Type),
+                    _ => false
+                });
             
-            return type
-                .GetMembers()
-                .Where(m => m.IsPublic())
-                .Any(m => (m is IFieldSymbol f && HasReferenceObjectInGraph(f.Type))
-                          || (m is IPropertySymbol { IsIndexer: false } p && HasReferenceObjectInGraph(p.Type)));
+            bool NotCurrent(ITypeSymbol other) => !SymbolEqualityComparer.Default.Equals(other, type);
         }
 
         private void StartMethod(ITypeSymbol type)
